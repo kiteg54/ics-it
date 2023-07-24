@@ -1,0 +1,28 @@
+CREATE TABLE dbo.SKU(
+    ID INT IDENTITY(1, 1),
+    Code TEXT UNIQUE,
+    Name VARCHAR(100),
+    CONSTRAINT PK_SKU_ID PRIMARY KEY (ID)
+);
+
+CREATE TABLE dbo.Family(
+    ID INT IDENTITY(1, 1),
+    SurName VARCHAR(100),
+    BudgetValue DECIMAL(18, 2),
+    CONSTRAINT PK_Family_ID PRIMARY KEY (ID)
+);
+
+CREATE TABLE dbo.Basket(
+    ID INT IDENTITY(1, 1),
+    ID_SKU INT NOT NULL,
+    ID_Family INT NOT NULL,
+    Quantity INT,
+    Value DECIMAL(18, 2),
+    PurchaseDate DATE DEFAULT(SYSDATETIME()),
+    DiscountValue DECIMAL(18, 2),
+    CONSTRAINT PK_Basket_ID PRIMARY KEY (ID),
+    CONSTRAINT FK_Basket_ID_SKU FOREIGN KEY (ID_SKU) REFERENCES dbo.SKU(PK_SKU_ID) ON DELETE CASCADE,
+    CONSTRAINT FK_Family_ID_SKU FOREIGN KEY (ID_Family) REFERENCES dbo.Family(PK_Family_ID) ON DELETE CASCADE,
+    CONSTRAINT CHK_Basket_Quantity CHECK (Quantity >= 0),
+    CONSTRAINT CHK_Basket_Value CHECK (Value >= 0)
+);
